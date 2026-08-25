@@ -1,0 +1,6 @@
+{
+  "name": "TeamPulse — Employee Performance Dashboard",
+  "description": "Role-based employee performance tracking dashboard with interactive org chart, task management, KPI engine, and Rally/Workday sync integrations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
