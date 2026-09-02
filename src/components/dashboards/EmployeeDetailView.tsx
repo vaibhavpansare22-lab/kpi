@@ -36,6 +36,7 @@ export const EmployeeDetailView: React.FC = () => {
     selectedEmployeeId,
     setSelectedEmployeeId,
     setActiveView,
+    openTaskReview,
     users,
     performanceSummaries,
     tasks,
@@ -56,7 +57,7 @@ export const EmployeeDetailView: React.FC = () => {
         <p className="text-sm text-slate-500">Employee record not found or access restricted.</p>
         <button
           onClick={() => setActiveView('dashboard')}
-          className="mt-4 px-4 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-xl"
+          className="mt-4 px-4 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-xl cursor-pointer"
         >
           Return to Dashboard
         </button>
@@ -89,7 +90,7 @@ export const EmployeeDetailView: React.FC = () => {
         <div className="flex items-center gap-2 text-xs text-slate-500">
           <span>Direct Supervisor:</span>
           <strong className="text-slate-900 font-semibold bg-slate-100 px-3 py-1 rounded-lg border border-slate-200/60">
-            {manager?.name || 'Executive Leadership'}
+            {manager?.name || 'Ahmed Naimabadi (Engineering Manager)'}
           </strong>
         </div>
       </div>
@@ -115,7 +116,7 @@ export const EmployeeDetailView: React.FC = () => {
                 </div>
                 <p className="text-sm text-indigo-200/80 mt-0.5 font-medium">{employee.title}</p>
                 <p className="text-xs text-slate-400 mt-1">
-                  {employee.department} • Joined {employee.joinedDate} • Direct Manager: {manager?.name || 'Executive'}
+                  {employee.department} • Joined {employee.joinedDate} • Direct Manager: {manager?.name || 'Ahmed Naimabadi'}
                 </p>
               </div>
             </div>
@@ -283,7 +284,7 @@ export const EmployeeDetailView: React.FC = () => {
           </div>
         </div>
 
-        {/* Bento Tile 9: Assigned Task History Table (12 cols) */}
+        {/* Bento Tile 9: Assigned Task History Table (12 cols) with Review HUD */}
         <div className="lg:col-span-12 bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
           <div className="p-5 md:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/40">
             <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
@@ -297,10 +298,10 @@ export const EmployeeDetailView: React.FC = () => {
                 <tr className="bg-slate-50/80 text-[11px] font-bold text-slate-600 uppercase tracking-wider border-b border-slate-200/80">
                   <th className="py-3.5 px-5">Title</th>
                   <th className="py-3.5 px-4">Category</th>
-                  <th className="py-3.5 px-4">Source</th>
                   <th className="py-3.5 px-4">Timeline</th>
                   <th className="py-3.5 px-4">Hours</th>
-                  <th className="py-3.5 px-5 text-right">Status</th>
+                  <th className="py-3.5 px-4">Status</th>
+                  <th className="py-3.5 px-5 text-right">Review HUD</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -308,15 +309,19 @@ export const EmployeeDetailView: React.FC = () => {
                   <tr key={t.id} className="hover:bg-indigo-50/30 transition-colors">
                     <td className="py-3.5 px-5 font-semibold text-slate-900">{t.title}</td>
                     <td className="py-3.5 px-4 text-slate-500 font-medium">{t.category}</td>
-                    <td className="py-3.5 px-4">
-                      <span className="uppercase text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60">
-                        {t.source}
-                      </span>
-                    </td>
                     <td className="py-3.5 px-4 text-slate-600 font-medium">{t.dueDate}</td>
                     <td className="py-3.5 px-4 font-mono text-slate-800">{t.actualHours}h / {t.estimatedHours}h</td>
-                    <td className="py-3.5 px-5 text-right capitalize font-semibold text-indigo-700">
+                    <td className="py-3.5 px-4 capitalize font-semibold text-indigo-700">
                       {t.status.replace('_', ' ')}
+                    </td>
+                    <td className="py-3.5 px-5 text-right">
+                      <button
+                        onClick={() => openTaskReview(t.id)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-cyan-300 hover:text-cyan-200 border border-cyan-500/40 shadow-sm transition-all cursor-pointer group"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
+                        <span>Review HUD</span>
+                      </button>
                     </td>
                   </tr>
                 ))}

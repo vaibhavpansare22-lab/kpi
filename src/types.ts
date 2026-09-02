@@ -20,6 +20,21 @@ export type TaskStatus = 'not_started' | 'in_progress' | 'completed' | 'blocked'
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
 export type TaskSource = 'manual' | 'rally' | 'workday';
 
+export interface TaskReviewData {
+  problemStatement: string;
+  beforeState: string;
+  afterState: string;
+  challenges: string;
+  learning: string;
+  businessOutcome: string;
+  architectureHighlights?: string[];
+  metricsDelta?: { label: string; before: string; after: string; impact: string }[];
+  lastUpdated?: string;
+  reviewedByManager?: boolean;
+  managerNotes?: string;
+  managerRating?: number; // 1-5 scale
+}
+
 export interface Task {
   id: string;
   assignedTo: string; // userId
@@ -38,6 +53,8 @@ export interface Task {
   approved?: boolean;
   storyPoints?: number;
   externalRef?: string;
+  kpiIds?: string[]; // Manager authority: linked KPI IDs
+  review?: TaskReviewData; // Futuristic Task Review Data
 }
 
 export type MetricType = 'numeric' | 'percentage' | 'boolean' | 'rating_scale';

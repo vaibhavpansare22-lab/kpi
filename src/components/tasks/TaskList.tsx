@@ -2,27 +2,31 @@ import React, { useState, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Task, TaskStatus, TaskPriority, TaskSource } from '../../types';
 import { TaskEntryModal } from './TaskEntryModal';
+import { TaskReviewModal } from './TaskReviewModal';
 import {
   Plus,
   Search,
-  Filter,
   CheckCircle2,
   Clock,
   AlertCircle,
   ShieldCheck,
   Edit2,
   Trash2,
-  Check,
   Calendar,
   Layers,
-  ArrowUpDown,
   Tag,
+  Sparkles,
   ExternalLink,
+  Shield,
+  Star,
+  Activity,
+  Zap,
 } from 'lucide-react';
 
 export const TaskList: React.FC = () => {
   const {
     tasks,
+    kpis,
     users,
     currentUser,
     isAdmin,
@@ -32,6 +36,9 @@ export const TaskList: React.FC = () => {
     deleteTask,
     approveTask,
     getDirectReports,
+    openTaskReview,
+    addKpiToTask,
+    removeKpiFromTask,
   } = useApp();
 
   // Filters state
@@ -44,6 +51,7 @@ export const TaskList: React.FC = () => {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [reviewModalTaskId, setReviewModalTaskId] = useState<string | null>(null);
 
   // Accessible tasks based on role
   const directReports = isManager ? getDirectReports(currentUser.id) : [];
@@ -83,6 +91,12 @@ export const TaskList: React.FC = () => {
     users.forEach((u) => map.set(u.id, u));
     return map;
   }, [users]);
+
+  const kpiMap = useMemo(() => {
+    const map = new Map<string, (typeof kpis)[0]>();
+    kpis.forEach((k) => map.set(k.id, k));
+    return map;
+  }, [kpis]);
 
   const getStatusBadge = (status: TaskStatus) => {
     switch (status) {
@@ -172,40 +186,49 @@ export const TaskList: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header & Primary Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-            {isEmployee ? 'My Task & Velocity Log' : 'Task Operations & Review'}
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              {isEmployee ? 'My Task & Velocity Log' : 'Task Operations & Review Matrix'}
+            </h1>
+            {isManager && (
+              <span className="text-[10px] uppercase font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-0.5 rounded-full">
+                Manager Authority Active
+              </span>
+            )}
+          </div>
           <p className="text-xs text-slate-500 mt-1">
             {isEmployee
-              ? 'Log work items, update hours spent, and track story delivery progress.'
-              : 'Review and approve team deliverables across Manual, Rally, and Workday channels.'}
+              ? 'Log work items, open futuristic task reviews (Problem Statement, Before/After, Challenges, Learnings, Outcomes).'
+              : 'Review and approve team deliverables, manage Task KPI bindings, and sign off on reviews.'}
           </p>
         </div>
 
-        <button
-          id="new-task-btn"
-          onClick={() => {
-            setEditingTask(null);
-            setIsModalOpen(true);
-          }}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>New Task Entry</span>
-        </button>
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <button
+            id="new-task-btn"
+            onClick={() => {
+              setEditingTask(null);
+              setIsModalOpen(true);
+            }}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Task Entry</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+      <div className="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-xs space-y-3">
         <div className="flex flex-wrap items-center gap-3">
           {/* Search bar */}
           <div className="relative flex-1 min-w-[220px]">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             <input
               type="text"
-              placeholder="Search by title, description or category..."
+              placeholder="Search by title, description, or category..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -217,12 +240,12 @@ export const TaskList: React.FC = () => {
             <select
               value={assigneeFilter}
               onChange={(e) => setAssigneeFilter(e.target.value)}
-              className="px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-700"
+              className="px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-700 font-medium"
             >
               <option value="ALL">All Assignees</option>
               {(isAdmin ? users : directReports).map((u) => (
                 <option key={u.id} value={u.id}>
-                  {u.name}
+                  {u.name} ({u.title.split(' ')[0]})
                 </option>
               ))}
             </select>
@@ -232,7 +255,7 @@ export const TaskList: React.FC = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-700"
+            className="px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-700 font-medium"
           >
             <option value="ALL">All Statuses</option>
             <option value="in_progress">In Progress</option>
@@ -245,7 +268,7 @@ export const TaskList: React.FC = () => {
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-700"
+            className="px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-700 font-medium"
           >
             <option value="ALL">All Priorities</option>
             <option value="urgent">Urgent</option>
@@ -258,7 +281,7 @@ export const TaskList: React.FC = () => {
           <select
             value={sourceFilter}
             onChange={(e) => setSourceFilter(e.target.value)}
-            className="px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-700"
+            className="px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-700 font-medium"
           >
             <option value="ALL">All Sources</option>
             <option value="manual">Manual Entry</option>
@@ -271,7 +294,7 @@ export const TaskList: React.FC = () => {
         <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
           <span>
             Showing <strong>{filteredTasks.length}</strong> of{' '}
-            <strong>{roleFilteredTasks.length}</strong> total tasks
+            <strong>{roleFilteredTasks.length}</strong> tasks in scope
           </span>
           {(statusFilter !== 'ALL' ||
             priorityFilter !== 'ALL' ||
@@ -286,7 +309,7 @@ export const TaskList: React.FC = () => {
                 setSourceFilter('ALL');
                 setAssigneeFilter('ALL');
               }}
-              className="text-indigo-600 hover:text-indigo-800 font-semibold"
+              className="text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer"
             >
               Reset all filters
             </button>
@@ -294,20 +317,20 @@ export const TaskList: React.FC = () => {
         </div>
       </div>
 
-      {/* Tasks Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      {/* Tasks Table with Review HUD Launcher */}
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
-                <th className="py-3 px-4">Task Details</th>
-                <th className="py-3 px-4">Assignee</th>
-                <th className="py-3 px-4">Source</th>
-                <th className="py-3 px-4">Timeline</th>
-                <th className="py-3 px-4">Hours (Est / Act)</th>
-                <th className="py-3 px-4">Priority</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+              <tr className="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                <th className="py-3.5 px-4">Task Details & Category</th>
+                <th className="py-3.5 px-4">Assignee</th>
+                <th className="py-3.5 px-4">Linked KPIs (Manager Governed)</th>
+                <th className="py-3.5 px-4">Timeline</th>
+                <th className="py-3.5 px-4">Hours</th>
+                <th className="py-3.5 px-4">Status</th>
+                <th className="py-3.5 px-4 text-center">Review HUD</th>
+                <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs">
@@ -327,32 +350,29 @@ export const TaskList: React.FC = () => {
                 filteredTasks.map((task) => {
                   const assignee = userMap.get(task.assignedTo);
                   const isApproved = task.approved;
+                  const taskKpis = (task.kpiIds || []).map((id) => kpiMap.get(id)).filter(Boolean);
 
                   return (
                     <tr
                       key={task.id}
                       id={`task-row-${task.id}`}
-                      className="hover:bg-slate-50/70 transition-colors"
+                      className="hover:bg-indigo-50/20 transition-colors"
                     >
                       {/* Title & Category */}
-                      <td className="py-3 px-4 min-w-[240px] max-w-[320px]">
+                      <td className="py-3.5 px-4 min-w-[220px] max-w-[280px]">
                         <div className="font-semibold text-slate-900 line-clamp-1">
                           {task.title}
                         </div>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[10px] text-slate-500 font-medium">
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[10px] text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded-md">
                             {task.category}
                           </span>
-                          {task.storyPoints !== undefined && (
-                            <span className="text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.2 rounded font-bold">
-                              {task.storyPoints} pts
-                            </span>
-                          )}
+                          {getSourceBadge(task.source)}
                         </div>
                       </td>
 
                       {/* Assignee */}
-                      <td className="py-3 px-4 whitespace-nowrap">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <img
                             src={
@@ -360,41 +380,71 @@ export const TaskList: React.FC = () => {
                               'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'
                             }
                             alt={assignee?.name || 'User'}
-                            className="w-6 h-6 rounded-full object-cover border border-slate-300"
+                            className="w-7 h-7 rounded-xl object-cover border border-slate-200"
                           />
-                          <span className="font-medium text-slate-800">
-                            {assignee?.name || 'Unassigned'}
-                          </span>
+                          <div>
+                            <span className="font-semibold text-slate-900 block text-xs">
+                              {assignee?.name || 'Unassigned'}
+                            </span>
+                            <span className="text-[10px] text-slate-400">
+                              {assignee?.title.split(' ')[0]}
+                            </span>
+                          </div>
                         </div>
                       </td>
 
-                      {/* Source */}
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        {getSourceBadge(task.source)}
+                      {/* Linked KPIs (Manager Authority: Add/Remove KPIs per task) */}
+                      <td className="py-3.5 px-4 min-w-[180px] max-w-[240px]">
+                        <div className="flex flex-wrap gap-1 items-center">
+                          {taskKpis.length === 0 ? (
+                            <span className="text-[10px] text-slate-400 italic">No KPIs linked</span>
+                          ) : (
+                            taskKpis.map((kpi) => (
+                              <span
+                                key={kpi?.id}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100"
+                              >
+                                <Tag className="w-2.5 h-2.5 text-indigo-500" />
+                                <span className="truncate max-w-[110px]">{kpi?.name}</span>
+                              </span>
+                            ))
+                          )}
+                          {(isManager || isAdmin) && (
+                            <button
+                              onClick={() => {
+                                setReviewModalTaskId(task.id);
+                              }}
+                              className="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold px-1.5 py-0.5 rounded bg-indigo-50/80 hover:bg-indigo-100 transition-colors cursor-pointer"
+                              title="Manager Authority: Manage task KPI bindings"
+                            >
+                              + Manage KPIs
+                            </button>
+                          )}
+                        </div>
                       </td>
 
                       {/* Timeline */}
-                      <td className="py-3 px-4 whitespace-nowrap text-slate-600">
-                        <div className="text-[11px]">
+                      <td className="py-3.5 px-4 whitespace-nowrap text-slate-600">
+                        <div className="text-[11px] font-medium">
                           Due: <strong className="text-slate-800">{task.dueDate}</strong>
                         </div>
                         {task.completedDate && (
-                          <div className="text-[10px] text-emerald-600">
-                            Done: {task.completedDate}
+                          <div className="text-[10px] text-emerald-600 font-semibold">
+                            ✓ {task.completedDate}
                           </div>
                         )}
                       </td>
 
                       {/* Hours */}
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <div className="flex items-center gap-1.5">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1 text-xs">
                           <span className="font-mono text-slate-600">{task.estimatedHours}h</span>
                           <span className="text-slate-300">/</span>
                           <span
                             className={`font-mono font-bold ${
                               task.actualHours > task.estimatedHours
                                 ? 'text-amber-600'
-                                : 'text-slate-800'
+                                : 'text-slate-900'
                             }`}
                           >
                             {task.actualHours}h
@@ -402,13 +452,8 @@ export const TaskList: React.FC = () => {
                         </div>
                       </td>
 
-                      {/* Priority */}
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        {getPriorityBadge(task.priority)}
-                      </td>
-
                       {/* Status & Quick Change */}
-                      <td className="py-3 px-4 whitespace-nowrap">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         <select
                           value={task.status}
                           onChange={(e) =>
@@ -423,14 +468,25 @@ export const TaskList: React.FC = () => {
                         </select>
                       </td>
 
+                      {/* Review Task Page Launcher (Cool & Futuristic) */}
+                      <td className="py-3.5 px-4 whitespace-nowrap text-center">
+                        <button
+                          onClick={() => openTaskReview(task.id)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-cyan-300 hover:text-cyan-200 border border-cyan-500/40 shadow-sm transition-all cursor-pointer group"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
+                          <span>Review HUD</span>
+                        </button>
+                      </td>
+
                       {/* Actions */}
-                      <td className="py-3 px-4 whitespace-nowrap text-right">
+                      <td className="py-3.5 px-4 whitespace-nowrap text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           {/* Approve button for Manager/Admin on unapproved team tasks */}
                           {!isEmployee && !isApproved && (
                             <button
                               onClick={() => approveTask(task.id)}
-                              className="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1"
+                              className="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-lg text-[11px] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
                               title="Approve team deliverable"
                             >
                               <ShieldCheck className="w-3 h-3" />
@@ -443,7 +499,7 @@ export const TaskList: React.FC = () => {
                               setEditingTask(task);
                               setIsModalOpen(true);
                             }}
-                            className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                            className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
                             title="Edit task"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -452,7 +508,7 @@ export const TaskList: React.FC = () => {
                           {(isAdmin || task.createdBy === currentUser.id) && (
                             <button
                               onClick={() => deleteTask(task.id)}
-                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                               title="Delete task"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -469,7 +525,7 @@ export const TaskList: React.FC = () => {
         </div>
       </div>
 
-      {/* Task Modal */}
+      {/* Task Edit/Create Modal */}
       <TaskEntryModal
         isOpen={isModalOpen}
         onClose={() => {
@@ -477,6 +533,13 @@ export const TaskList: React.FC = () => {
           setEditingTask(null);
         }}
         initialTask={editingTask}
+      />
+
+      {/* Futuristic Task Review Modal */}
+      <TaskReviewModal
+        isOpen={!!reviewModalTaskId}
+        onClose={() => setReviewModalTaskId(null)}
+        taskId={reviewModalTaskId}
       />
     </div>
   );

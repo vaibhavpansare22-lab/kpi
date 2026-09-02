@@ -35,6 +35,7 @@ export const EmployeeDashboard: React.FC = () => {
     period,
     updateTask,
     setActiveView,
+    openTaskReview,
   } = useApp();
 
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -69,13 +70,21 @@ export const EmployeeDashboard: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => setIsTaskModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Submit Task Entry</span>
-        </button>
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={() => setActiveView('tasks')}
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all cursor-pointer shadow-2xs"
+          >
+            <span>All Tasks ({myTasks.length})</span>
+          </button>
+          <button
+            onClick={() => setIsTaskModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Submit Task Entry</span>
+          </button>
+        </div>
       </div>
 
       {/* Main Bento Grid */}
@@ -268,7 +277,7 @@ export const EmployeeDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Bento Tile 4: Personal Task History Table (12 cols) */}
+        {/* Bento Tile 4: Personal Task History Table (12 cols) with Review HUD */}
         <div className="lg:col-span-12 bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
           <div className="p-5 md:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/40">
             <div>
@@ -277,14 +286,14 @@ export const EmployeeDashboard: React.FC = () => {
                 <span>My Task History & Workload ({myTasks.length})</span>
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Update status and track estimated vs logged hours in real-time
+                Update status, track logged hours, and view the futuristic Task Review HUD
               </p>
             </div>
             <button
               onClick={() => setActiveView('tasks')}
               className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer"
             >
-              Open Full Tasks View →
+              Open Full Tasks Matrix →
             </button>
           </div>
 
@@ -294,10 +303,10 @@ export const EmployeeDashboard: React.FC = () => {
                 <tr className="bg-slate-50/80 text-[11px] font-bold text-slate-600 uppercase tracking-wider border-b border-slate-200/80">
                   <th className="py-3.5 px-5">Task Title</th>
                   <th className="py-3.5 px-4">Category</th>
-                  <th className="py-3.5 px-4">Source</th>
                   <th className="py-3.5 px-4">Due Date</th>
                   <th className="py-3.5 px-4">Logged Hours</th>
-                  <th className="py-3.5 px-5 text-right">Status</th>
+                  <th className="py-3.5 px-4">Status</th>
+                  <th className="py-3.5 px-5 text-right">Review HUD</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -312,16 +321,11 @@ export const EmployeeDashboard: React.FC = () => {
                       )}
                     </td>
                     <td className="py-3.5 px-4 text-slate-500 font-medium">{t.category}</td>
-                    <td className="py-3.5 px-4">
-                      <span className="uppercase text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200/60">
-                        {t.source}
-                      </span>
-                    </td>
                     <td className="py-3.5 px-4 text-slate-600 font-medium">{t.dueDate}</td>
                     <td className="py-3.5 px-4 font-mono text-slate-800">
                       {t.actualHours}h / {t.estimatedHours}h
                     </td>
-                    <td className="py-3.5 px-5 text-right">
+                    <td className="py-3.5 px-4">
                       <select
                         value={t.status}
                         onChange={(e) => handleStatusChange(t.id, e.target.value as TaskStatus)}
@@ -332,6 +336,15 @@ export const EmployeeDashboard: React.FC = () => {
                         <option value="completed">Completed</option>
                         <option value="blocked">Blocked</option>
                       </select>
+                    </td>
+                    <td className="py-3.5 px-5 text-right">
+                      <button
+                        onClick={() => openTaskReview(t.id)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-cyan-300 hover:text-cyan-200 border border-cyan-500/40 shadow-sm transition-all cursor-pointer group"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
+                        <span>Review HUD</span>
+                      </button>
                     </td>
                   </tr>
                 ))}

@@ -7,12 +7,13 @@ import {
   Network,
   Radio,
   Lock,
-  Layers,
-  Award,
-  ChevronRight,
+  Sparkles,
   TrendingUp,
   Shield,
   Users,
+  Award,
+  ChevronRight,
+  LogOut,
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -25,8 +26,10 @@ export const Sidebar: React.FC = () => {
     isEmployee,
     tasks,
     kpis,
+    selectedReviewTaskId,
     setSelectedEmployeeId,
     setSelectedManagerId,
+    logout,
   } = useApp();
 
   const userTasksCount = tasks.filter((t) => {
@@ -53,24 +56,24 @@ export const Sidebar: React.FC = () => {
     {
       id: 'dashboard',
       label: isAdmin
-        ? 'Org Executive Board'
+        ? 'Executive Org Matrix'
         : isManager
-        ? 'Team Performance'
-        : 'My Scorecard',
+        ? 'Manager Squad View'
+        : 'Employee Scorecard',
       description: isAdmin
         ? 'Org-wide KPIs & Manager comparison'
         : isManager
-        ? 'Direct reports & velocity metrics'
+        ? 'Direct reports, KPI authority & review sign-off'
         : 'Personal score & goal tracking',
       icon: <LayoutDashboard className="w-4 h-4" />,
       allowedRoles: ['admin', 'manager', 'employee'],
     },
     {
       id: 'tasks',
-      label: isEmployee ? 'My Tasks & Work Log' : 'Task Operations',
+      label: isEmployee ? 'My Tasks & Work Log' : 'Task Operations & Matrix',
       description: isEmployee
-        ? 'Manual & synced task entries'
-        : 'Team assignments & approvals',
+        ? 'Manual & synced tasks + Review HUD'
+        : 'Team deliverables & KPI bindings',
       icon: <CheckSquare className="w-4 h-4" />,
       allowedRoles: ['admin', 'manager', 'employee'],
       badge: pendingApprovalCount > 0 && !isEmployee ? `${pendingApprovalCount} pend.` : userTasksCount,
@@ -80,8 +83,17 @@ export const Sidebar: React.FC = () => {
           : 'bg-slate-100 text-slate-700',
     },
     {
+      id: 'task_review',
+      label: 'Task Review HUD',
+      description: 'Problem, Before/After, Challenges, Learnings',
+      icon: <Sparkles className="w-4 h-4 text-cyan-400" />,
+      allowedRoles: ['admin', 'manager', 'employee'],
+      badge: 'Futuristic',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40',
+    },
+    {
       id: 'kpis',
-      label: isEmployee ? 'My Goals & Targets' : 'KPI Management',
+      label: isEmployee ? 'My Goals & Targets' : 'KPI Registry & Weights',
       description: isEmployee
         ? 'Evaluations & target thresholds'
         : 'Define metrics, weights & review',
@@ -92,15 +104,15 @@ export const Sidebar: React.FC = () => {
     },
     {
       id: 'org',
-      label: 'Org Structure Chart',
+      label: 'Org Hierarchy Matrix',
       description: 'Interactive hierarchy & team reassignments',
       icon: <Network className="w-4 h-4" />,
       allowedRoles: ['admin'],
     },
     {
       id: 'integrations',
-      label: 'API Integrations',
-      description: 'Rally & Workday synchronization',
+      label: 'Rally & Workday Hub',
+      description: 'Enterprise connector synchronization',
       icon: <Radio className="w-4 h-4" />,
       allowedRoles: ['admin', 'manager'],
     },
@@ -115,7 +127,7 @@ export const Sidebar: React.FC = () => {
             <img
               src={currentUser.avatar}
               alt={currentUser.name}
-              className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500/80 shadow-xs"
+              className="w-10 h-10 rounded-2xl object-cover border-2 border-indigo-500/80 shadow-md"
             />
             <div
               className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-slate-900 ${
@@ -129,7 +141,7 @@ export const Sidebar: React.FC = () => {
             </h2>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span
-                className={`text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded ${
+                className={`text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded ${
                   isAdmin
                     ? 'bg-purple-900/60 text-purple-300 border border-purple-700/50'
                     : isManager
@@ -140,37 +152,37 @@ export const Sidebar: React.FC = () => {
                 {currentUser.role}
               </span>
               <span className="text-[11px] text-slate-400 truncate">
-                {currentUser.department.split(' ')[0]}
+                {currentUser.title.split(' ')[0]}
               </span>
             </div>
           </div>
         </div>
 
         {/* Role context helper message */}
-        <div className="mt-3 p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 text-[11px] text-slate-300 flex items-start gap-2">
+        <div className="mt-3 p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-[11px] text-slate-300 flex items-start gap-2">
           {isAdmin ? (
             <>
               <Shield className="w-3.5 h-3.5 text-purple-400 shrink-0 mt-0.5" />
-              <span>Full Admin scope: Full Org Chart, all teams, KPIs, Integrations.</span>
+              <span>Admin: Full Org Chart, Global KPIs, User Provisioning & Connectors.</span>
             </>
           ) : isManager ? (
             <>
               <Users className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
-              <span>Manager scope: Managing 7 direct reports, KPIs & Task approvals.</span>
+              <span>Manager Ahmed: KPI Authority (Add/Remove per task) & Review Sign-offs.</span>
             </>
           ) : (
             <>
               <Award className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-              <span>Employee scope: Isolated personal scorecard & task logging.</span>
+              <span>Employee: Personal scorecard, task log & Futuristic Review HUD.</span>
             </>
           )}
         </div>
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 p-3 space-y-1.5">
+      <nav className="flex-1 p-3 space-y-1.5 overflow-y-auto">
         <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-          Navigation
+          Navigation Workspace
         </div>
 
         {navItems.map((item) => {
@@ -181,7 +193,7 @@ export const Sidebar: React.FC = () => {
             return (
               <div
                 key={item.id}
-                className="flex items-center justify-between px-3 py-2 text-slate-600 rounded-lg text-xs font-medium cursor-not-allowed opacity-50 select-none"
+                className="flex items-center justify-between px-3 py-2 text-slate-600 rounded-xl text-xs font-medium cursor-not-allowed opacity-50 select-none"
                 title="Restricted by Role-Based Access Control (RBAC)"
               >
                 <div className="flex items-center gap-2.5">
@@ -202,9 +214,9 @@ export const Sidebar: React.FC = () => {
                 setSelectedEmployeeId(null);
                 setSelectedManagerId(null);
               }}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium transition-all group text-left ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all group text-left cursor-pointer ${
                 isActive
-                  ? 'bg-indigo-600 text-white font-semibold shadow-xs'
+                  ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-600/30'
                   : 'text-slate-300 hover:bg-slate-800 hover:text-white'
               }`}
             >
@@ -243,10 +255,10 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Quick Org & System Summary in Sidebar Footer */}
-      <div className="p-3 m-3 rounded-xl bg-slate-800/70 border border-slate-700/50 text-xs">
+      <div className="p-3 m-3 rounded-2xl bg-slate-800/70 border border-slate-700/50 text-xs">
         <div className="flex items-center justify-between text-slate-400 mb-2">
-          <span className="text-[11px] font-medium flex items-center gap-1.5">
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" /> TeamPulse Engine
+          <span className="text-[11px] font-bold flex items-center gap-1.5 text-slate-200">
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" /> TeamPulse Telemetry
           </span>
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
         </div>
@@ -260,6 +272,14 @@ export const Sidebar: React.FC = () => {
             <span className="font-semibold text-emerald-400">Connected</span>
           </div>
         </div>
+
+        <button
+          onClick={logout}
+          className="mt-3 w-full py-1.5 px-2 bg-slate-900/80 hover:bg-rose-950/40 text-slate-400 hover:text-rose-300 border border-slate-700/60 hover:border-rose-500/40 rounded-xl text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+        >
+          <LogOut className="w-3 h-3" />
+          <span>Exit to Login Screen</span>
+        </button>
       </div>
     </aside>
   );

@@ -5,9 +5,9 @@ import {
   KPI,
   KPIResult,
   Integration,
-  UserRole,
   PeriodType,
   UserPerformanceSummary,
+  TaskReviewData,
 } from '../types';
 import {
   SEED_USERS,
@@ -26,12 +26,16 @@ export type AppView =
   | 'kpis'
   | 'org'
   | 'integrations'
-  | 'employee_detail';
+  | 'employee_detail'
+  | 'task_review';
 
 interface AppContextType {
   // Auth & Role Context
   currentUser: User;
   setCurrentUser: (user: User) => void;
+  isAuthenticated: boolean;
+  login: (user: User) => void;
+  logout: () => void;
   switchUserById: (userId: string) => void;
   isAdmin: boolean;
   isManager: boolean;
@@ -44,6 +48,9 @@ interface AppContextType {
   setSelectedEmployeeId: (id: string | null) => void;
   selectedManagerId: string | null;
   setSelectedManagerId: (id: string | null) => void;
+  selectedReviewTaskId: string | null;
+  setSelectedReviewTaskId: (id: string | null) => void;
+  openTaskReview: (taskId: string) => void;
   period: PeriodType;
   setPeriod: (period: PeriodType) => void;
 
@@ -68,6 +75,15 @@ interface AppContextType {
   deleteTask: (taskId: string) => void;
   approveTask: (taskId: string) => void;
 
+  // Manager KPI Assignment to Tasks (Manager Authority)
+  addKpiToTask: (taskId: string, kpiId: string) => boolean;
+  removeKpiFromTask: (taskId: string, kpiId: string) => boolean;
+  setTaskKpis: (taskId: string, kpiIds: string[]) => boolean;
+
+  // Task Review Page Operations
+  updateTaskReview: (taskId: string, review: Partial<TaskReviewData>) => void;
+  managerSignOffReview: (taskId: string, notes: string, rating: number) => void;
+
   // KPI Operations
   addKpi: (kpiData: Omit<KPI, 'id'>) => void;
   updateKpi: (kpiId: string, partial: Partial<KPI>) => void;
@@ -84,19 +100,20 @@ interface AppContextType {
   getDirectReports: (managerId: string) => User[];
   canAccessUser: (targetUserId: string) => boolean;
   resetToDefaults: () => void;
-  notification: { message: string; type: 'success' | 'info' | 'error' } | null;
-  setNotification: (notif: { message: string; type: 'success' | 'info' | 'error' } | null) => void;
+  notification: { message: string; type: 'success' | 'info' | 'error' | 'warning' } | null;
+  setNotification: (notif: { message: string; type: 'success' | 'info' | 'error' | 'warning' } | null) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  USERS: 'teampulse_users_v2',
-  TASKS: 'teampulse_tasks_v2',
-  KPIS: 'teampulse_kpis_v2',
-  RESULTS: 'teampulse_kpi_results_v2',
-  INTEGRATIONS: 'teampulse_integrations_v2',
-  ACTIVE_USER: 'teampulse_active_user_v2',
+  USERS: 'teampulse_users_v3',
+  TASKS: 'teampulse_tasks_v3',
+  KPIS: 'teampulse_kpis_v3',
+  RESULTS: 'teampulse_kpi_results_v3',
+  INTEGRATIONS: 'teampulse_integrations_v3',
+  ACTIVE_USER: 'teampulse_active_user_v3',
+  AUTH_STATUS: 'teampulse_auth_v3',
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -126,22 +143,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : SEED_INTEGRATIONS;
   });
 
-  // Current active user for demo/RBAC
+  // Authentication & active user
   const [currentUser, setCurrentUser] = useState<User>(() => {
     const savedId = localStorage.getItem(STORAGE_KEYS.ACTIVE_USER);
     if (savedId) {
       const match = SEED_USERS.find((u) => u.id === savedId);
       if (match) return match;
     }
-    return SEED_USERS[0]; // Admin by default
+    return SEED_USERS[1]; // Ahmed Naimabadi (Manager) by default
+  });
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    const savedAuth = localStorage.getItem(STORAGE_KEYS.AUTH_STATUS);
+    return savedAuth === 'true'; // Users land on the login page initially if not explicitly authenticated
   });
 
   // Navigation & filter state
   const [activeView, setActiveView] = useState<AppView>('dashboard');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [selectedManagerId, setSelectedManagerId] = useState<string | null>(null);
+  const [selectedReviewTaskId, setSelectedReviewTaskId] = useState<string | null>(null);
   const [period, setPeriod] = useState<PeriodType>('monthly');
-  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: 'success' | 'info' | 'error' | 'warning';
+  } | null>(null);
 
   // Auto-dismiss notification after 4s
   useEffect(() => {
@@ -178,23 +204,58 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.AUTH_STATUS, isAuthenticated ? 'true' : 'false');
+  }, [isAuthenticated]);
+
   // Role permissions
   const isAdmin = currentUser.role === 'admin';
   const isManager = currentUser.role === 'manager';
   const isEmployee = currentUser.role === 'employee';
 
+  const login = (user: User) => {
+    setCurrentUser(user);
+    setIsAuthenticated(true);
+    setSelectedEmployeeId(null);
+    setSelectedManagerId(null);
+    setSelectedReviewTaskId(null);
+    setActiveView('dashboard');
+    setNotification({
+      message: `Welcome back, ${user.name}! Logged in as ${user.role.toUpperCase()}.`,
+      type: 'success',
+    });
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setSelectedReviewTaskId(null);
+    setSelectedEmployeeId(null);
+    setSelectedManagerId(null);
+    setNotification({
+      message: 'Logged out successfully. Please sign in.',
+      type: 'info',
+    });
+  };
+
   const switchUserById = (userId: string) => {
     const found = users.find((u) => u.id === userId);
     if (found) {
       setCurrentUser(found);
+      setIsAuthenticated(true);
       setSelectedEmployeeId(null);
       setSelectedManagerId(null);
+      setSelectedReviewTaskId(null);
       setActiveView('dashboard');
       setNotification({
         message: `Switched identity to ${found.name} (${found.role.toUpperCase()})`,
         type: 'info',
       });
     }
+  };
+
+  const openTaskReview = (taskId: string) => {
+    setSelectedReviewTaskId(taskId);
+    setActiveView('task_review');
   };
 
   // Helper to get direct reports of a manager
@@ -282,7 +343,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const demoteToEmployee = (userId: string, newManagerId: string | null) => {
-    // Also reassign direct reports to admin if any
     setUsers((prev) => {
       return prev.map((u) => {
         if (u.id === userId) {
@@ -315,11 +375,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Task Management
   const addTask = (taskData: Omit<Task, 'id'>) => {
+    const defaultReview: TaskReviewData = {
+      problemStatement: `Implementation and technical execution for ${taskData.title}.`,
+      beforeState: 'Legacy architectural baseline requiring technical remediation and feature enhancements.',
+      afterState: 'Production-ready milestone completed with high test coverage and verified performance metrics.',
+      challenges: 'Managing technical dependencies, handling distributed concurrency, and verifying edge-case resilience.',
+      learning: 'Established reusable patterns, improved automated test coverage, and documented system retrospectives.',
+      businessOutcome: 'Accelerated engineering velocity, satisfied sprint SLAs, and improved customer satisfaction.',
+      architectureHighlights: ['Modular Design', 'High Concurrency', 'Zero-Downtime Migration'],
+      metricsDelta: [
+        { label: 'Engineering Output', before: 'Baseline', after: 'Enhanced (+100%)', impact: 'Sprint Target Met' }
+      ],
+      lastUpdated: new Date().toISOString().split('T')[0],
+      reviewedByManager: isManager || isAdmin,
+      managerNotes: isManager ? 'Initial review logged and acknowledged by Manager.' : undefined,
+      managerRating: 5,
+    };
+
     const newTask: Task = {
       ...taskData,
       id: `task-${Date.now()}`,
       approved: isManager || isAdmin,
+      kpiIds: taskData.kpiIds && taskData.kpiIds.length > 0 ? taskData.kpiIds : ['kpi-1', 'kpi-2'],
+      review: taskData.review || defaultReview,
     };
+
     setTasks((prev) => [newTask, ...prev]);
     setNotification({
       message: `Task "${newTask.title}" created successfully.`,
@@ -352,7 +432,158 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setTasks((prev) =>
       prev.map((t) => (t.id === taskId ? { ...t, approved: true } : t))
     );
-    setNotification({ message: 'Task approved by manager.', type: 'success' });
+    setNotification({ message: 'Task approved by Manager (Ahmed Naimabadi).', type: 'success' });
+  };
+
+  // Manager Authority: Add / Remove KPIs per Task
+  const addKpiToTask = (taskId: string, kpiId: string): boolean => {
+    if (!isManager && !isAdmin) {
+      setNotification({
+        message: 'Authority Restricted: Only Manager (Ahmed Naimabadi) or Admin can modify Task KPIs.',
+        type: 'warning',
+      });
+      return false;
+    }
+
+    const targetKpi = kpis.find((k) => k.id === kpiId);
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.id === taskId) {
+          const existingKpiIds = t.kpiIds || [];
+          if (!existingKpiIds.includes(kpiId)) {
+            return { ...t, kpiIds: [...existingKpiIds, kpiId] };
+          }
+        }
+        return t;
+      })
+    );
+
+    setNotification({
+      message: `Manager Authority: Added KPI "${targetKpi?.name || kpiId}" to task.`,
+      type: 'success',
+    });
+    return true;
+  };
+
+  const removeKpiFromTask = (taskId: string, kpiId: string): boolean => {
+    if (!isManager && !isAdmin) {
+      setNotification({
+        message: 'Authority Restricted: Only Manager (Ahmed Naimabadi) or Admin can modify Task KPIs.',
+        type: 'warning',
+      });
+      return false;
+    }
+
+    const targetKpi = kpis.find((k) => k.id === kpiId);
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.id === taskId) {
+          const existingKpiIds = t.kpiIds || [];
+          return { ...t, kpiIds: existingKpiIds.filter((id) => id !== kpiId) };
+        }
+        return t;
+      })
+    );
+
+    setNotification({
+      message: `Manager Authority: Removed KPI "${targetKpi?.name || kpiId}" from task.`,
+      type: 'info',
+    });
+    return true;
+  };
+
+  const setTaskKpis = (taskId: string, kpiIds: string[]): boolean => {
+    if (!isManager && !isAdmin) {
+      setNotification({
+        message: 'Authority Restricted: Only Manager (Ahmed Naimabadi) or Admin can modify Task KPIs.',
+        type: 'warning',
+      });
+      return false;
+    }
+
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, kpiIds } : t))
+    );
+
+    setNotification({
+      message: `Manager Authority: Updated KPI bindings (${kpiIds.length} KPIs attached).`,
+      type: 'success',
+    });
+    return true;
+  };
+
+  // Task Review Operations
+  const updateTaskReview = (taskId: string, reviewPartial: Partial<TaskReviewData>) => {
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.id === taskId) {
+          const currentReview = t.review || {
+            problemStatement: '',
+            beforeState: '',
+            afterState: '',
+            challenges: '',
+            learning: '',
+            businessOutcome: '',
+          };
+          return {
+            ...t,
+            review: {
+              ...currentReview,
+              ...reviewPartial,
+              lastUpdated: new Date().toISOString().split('T')[0],
+            },
+          };
+        }
+        return t;
+      })
+    );
+
+    setNotification({
+      message: 'Futuristic Task Review saved successfully.',
+      type: 'success',
+    });
+  };
+
+  const managerSignOffReview = (taskId: string, notes: string, rating: number) => {
+    if (!isManager && !isAdmin) {
+      setNotification({
+        message: 'Only Manager (Ahmed Naimabadi) has authority to sign off on Task Reviews.',
+        type: 'warning',
+      });
+      return;
+    }
+
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.id === taskId) {
+          const currentReview = t.review || {
+            problemStatement: '',
+            beforeState: '',
+            afterState: '',
+            challenges: '',
+            learning: '',
+            businessOutcome: '',
+          };
+          return {
+            ...t,
+            approved: true,
+            review: {
+              ...currentReview,
+              reviewedByManager: true,
+              managerNotes: notes,
+              managerRating: rating,
+              lastUpdated: new Date().toISOString().split('T')[0],
+            },
+          };
+        }
+        return t;
+      })
+    );
+
+    setNotification({
+      message: `Manager Ahmed Naimabadi signed off review with a ${rating}/5.0 Technical Rating!`,
+      type: 'success',
+    });
   };
 
   // KPI Management
@@ -513,12 +744,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setKpis(SEED_KPIS);
     setKpiResults(SEED_KPI_RESULTS);
     setIntegrations(SEED_INTEGRATIONS);
-    setCurrentUser(SEED_USERS[0]);
+    setCurrentUser(SEED_USERS[1]); // Ahmed Naimabadi (Manager)
+    setIsAuthenticated(false);
     setActiveView('dashboard');
     setSelectedEmployeeId(null);
     setSelectedManagerId(null);
+    setSelectedReviewTaskId(null);
     setNotification({
-      message: 'Reset all application data and org hierarchy to default seed state.',
+      message: 'Reset all application data, users, tasks, and KPI hierarchy to default state.',
       type: 'info',
     });
   };
@@ -528,6 +761,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         currentUser,
         setCurrentUser,
+        isAuthenticated,
+        login,
+        logout,
         switchUserById,
         isAdmin,
         isManager,
@@ -538,6 +774,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedEmployeeId,
         selectedManagerId,
         setSelectedManagerId,
+        selectedReviewTaskId,
+        setSelectedReviewTaskId,
+        openTaskReview,
         period,
         setPeriod,
         users,
@@ -555,6 +794,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateTask,
         deleteTask,
         approveTask,
+        addKpiToTask,
+        removeKpiFromTask,
+        setTaskKpis,
+        updateTaskReview,
+        managerSignOffReview,
         addKpi,
         updateKpi,
         deleteKpi,

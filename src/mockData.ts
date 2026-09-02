@@ -17,8 +17,8 @@ export const SEED_USERS: User[] = [
   },
   {
     id: 'user-ahmed',
-    name: 'Ahmed Khan',
-    email: 'ahmed@teampulse.com',
+    name: 'Ahmed Naimabadi',
+    email: 'ahmed.naimabadi@teampulse.com',
     role: 'manager',
     managerId: 'user-admin',
     department: 'Core Platform Engineering',
@@ -29,11 +29,11 @@ export const SEED_USERS: User[] = [
     phone: '+1 (555) 018-7744',
     location: 'Seattle, WA',
   },
-  // Ahmed's 7 Direct Reports
+  // Ahmed's Direct Reports
   {
     id: 'user-harsh',
-    name: 'Harsh Patel',
-    email: 'harsh@teampulse.com',
+    name: 'Harsh Patil',
+    email: 'harsh.patil@teampulse.com',
     role: 'employee',
     managerId: 'user-ahmed',
     department: 'Core Platform Engineering',
@@ -46,8 +46,8 @@ export const SEED_USERS: User[] = [
   },
   {
     id: 'user-advita',
-    name: 'Advita Sharma',
-    email: 'advita@teampulse.com',
+    name: 'Advita Mali',
+    email: 'advita.mali@teampulse.com',
     role: 'employee',
     managerId: 'user-ahmed',
     department: 'Core Platform Engineering',
@@ -59,23 +59,9 @@ export const SEED_USERS: User[] = [
     location: 'San Jose, CA',
   },
   {
-    id: 'user-vaibhav',
-    name: 'Vaibhav Pansare',
-    email: 'vaibhav@teampulse.com',
-    role: 'employee',
-    managerId: 'user-ahmed',
-    department: 'Core Platform Engineering',
-    title: 'Backend & Distributed Systems Engineer',
-    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80',
-    status: 'active',
-    joinedDate: '2023-02-18',
-    phone: '+1 (555) 017-4390',
-    location: 'New York, NY',
-  },
-  {
     id: 'user-akash',
-    name: 'Akash Verma',
-    email: 'akash@teampulse.com',
+    name: 'Akash Biswas',
+    email: 'akash.biswas@teampulse.com',
     role: 'employee',
     managerId: 'user-ahmed',
     department: 'Core Platform Engineering',
@@ -88,8 +74,8 @@ export const SEED_USERS: User[] = [
   },
   {
     id: 'user-om',
-    name: 'Om Gupta',
-    email: 'om@teampulse.com',
+    name: 'OM Bhutki',
+    email: 'om.bhutki@teampulse.com',
     role: 'employee',
     managerId: 'user-ahmed',
     department: 'Core Platform Engineering',
@@ -102,8 +88,8 @@ export const SEED_USERS: User[] = [
   },
   {
     id: 'user-mayank',
-    name: 'Mayank Joshi',
-    email: 'mayank@teampulse.com',
+    name: 'Mayank Nichlani',
+    email: 'mayank.nichlani@teampulse.com',
     role: 'employee',
     managerId: 'user-ahmed',
     department: 'Core Platform Engineering',
@@ -115,9 +101,9 @@ export const SEED_USERS: User[] = [
     location: 'Denver, CO',
   },
   {
-    id: 'user-yaddhnesh',
-    name: 'Yaddhnesh Rane',
-    email: 'yaddhnesh@teampulse.com',
+    id: 'user-yadnesh',
+    name: 'Yadnesh',
+    email: 'yadnesh@teampulse.com',
     role: 'employee',
     managerId: 'user-ahmed',
     department: 'Core Platform Engineering',
@@ -267,7 +253,7 @@ export const SEED_KPIS: KPI[] = [
 ];
 
 export const SEED_TASKS: Task[] = [
-  // Harsh Patel tasks
+  // Harsh Patil tasks
   {
     id: 'task-101',
     assignedTo: 'user-harsh',
@@ -284,13 +270,37 @@ export const SEED_TASKS: Task[] = [
     actualHours: 22,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-3', 'kpi-6'],
+    review: {
+      problemStatement: 'Legacy CSS-in-JS runtime overhead caused 420ms rendering delays on initial dashboard mount, leading to layout shift and high CPU consumption on mobile clients.',
+      beforeState: 'Un-optimized CSS-in-JS styled-components requiring runtime runtime stylesheet injection. Bundle size exceeded 2.4MB with 140ms styling calculation blocks.',
+      afterState: 'Zero-runtime atomic Tailwind CSS tokens with pre-compiled utility classes. Initial rendering time dropped to 38ms with a 65% reduction in CSS bundle footprint.',
+      challenges: 'Ensuring seamless backward compatibility for 80+ shared enterprise UI components while preserving custom dynamic theme variables across nested portals.',
+      learning: 'Implemented automated AST codemods to migrate 90% of legacy styles automatically, followed by visual regression testing with Playwright snapshots.',
+      businessOutcome: 'Accelerated Core Web Vitals (LCP improved by 1.8s) and eliminated 100% of runtime style injection crashes in production dashboards.',
+      architectureHighlights: [
+        'Atomic Utility Tree Shaking',
+        'Zero-Runtime CSS Parsing',
+        'WCAG 2.1 AA Contrast Tokens',
+        'Dynamic Theme CSS Custom Properties'
+      ],
+      metricsDelta: [
+        { label: 'Initial Render Time', before: '420 ms', after: '38 ms', impact: '91% Reduction' },
+        { label: 'CSS Bundle Payload', before: '2.4 MB', after: '410 KB', impact: '-83% Size' },
+        { label: 'Lighthouse Score', before: '64/100', after: '98/100', impact: '+34 Points' }
+      ],
+      lastUpdated: '2026-08-09',
+      reviewedByManager: true,
+      managerNotes: 'Outstanding refactoring effort by Harsh Patil. The atomic token structure is now the corporate benchmark for frontend squads.',
+      managerRating: 5,
+    },
   },
   {
     id: 'task-102',
     assignedTo: 'user-harsh',
     createdBy: 'user-harsh',
     title: 'Optimize Virtualized Table Rendering for 10k Records',
-    description: 'Implement windowing and canvas optimizations to sustain 60fps scrolling.',
+    description: 'Implement windowing and canvas optimizations to sustain 60fps scrolling on heavy enterprise datasets.',
     category: 'Frontend Performance',
     startDate: '2026-08-12',
     dueDate: '2026-08-20',
@@ -301,6 +311,30 @@ export const SEED_TASKS: Task[] = [
     actualHours: 26,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-6'],
+    review: {
+      problemStatement: 'Rendering 10,000+ real-time telemetry nodes caused browser thread locking (jank) and DOM node explosion exceeding 45,000 active nodes.',
+      beforeState: 'Full DOM node tree creation for all rows regardless of viewport visibility. Scroll FPS degraded to 12fps with intermittent browser freezes.',
+      afterState: 'Adaptive bi-directional virtualization windowing keeping DOM active nodes fixed at 32 regardless of table dataset size (tested up to 100k items).',
+      challenges: 'Dynamic row height estimation without pre-rendering, alongside smooth scrollbar proportional synchronization during rapid drag events.',
+      learning: 'Leveraged ResizeObserver coupled with binary search index caching to calculate dynamic row offsets in sub-millisecond time complexity O(log N).',
+      businessOutcome: 'Achieved locked 60fps scrolling on large enterprise audit datasets and reduced client RAM footprint by 380MB.',
+      architectureHighlights: [
+        'Binary Search Dynamic Offset Index',
+        'Bi-directional Viewport Windowing',
+        'RAF-throttled Scroll Dispatcher',
+        'Offscreen Canvas Measurement Engine'
+      ],
+      metricsDelta: [
+        { label: 'Scroll Framerate', before: '12 FPS', after: '60 FPS (Rock Solid)', impact: '5x Smoother' },
+        { label: 'DOM Node Count', before: '45,000+', after: '32 Nodes', impact: '99.9% Less DOM' },
+        { label: 'Memory Footprint', before: '580 MB', after: '120 MB', impact: '-79% RAM' }
+      ],
+      lastUpdated: '2026-08-19',
+      reviewedByManager: true,
+      managerNotes: 'Exemplary algorithm selection. Directly unlocked client enterprise scalability requirements.',
+      managerRating: 5,
+    },
   },
   {
     id: 'task-103',
@@ -318,14 +352,38 @@ export const SEED_TASKS: Task[] = [
     source: 'rally',
     storyPoints: 5,
     approved: true,
+    kpiIds: ['kpi-4', 'kpi-6'],
+    review: {
+      problemStatement: 'Power users with screen readers encountered missing ARIA attributes and focus traps in multi-select filter dropdowns.',
+      beforeState: 'Custom div dropdown elements lacking aria-expanded, aria-activedescendant, and keyboard arrow key traversal.',
+      afterState: 'Fully compliant W3C ARIA 1.2 Combobox pattern with virtual keyboard cursor, live region announcements, and high-contrast focus rings.',
+      challenges: 'Handling screen reader debounced speech synthesizer queues when users rapidly type search filter tokens.',
+      learning: 'Implemented custom useA11yCombobox headless hook using polite aria-live regions to avoid interrupting NVDA / VoiceOver screen readers.',
+      businessOutcome: 'Achieved 100% compliance on Section 508 / WCAG AA accessibility audit, mitigating legal compliance risks for federal enterprise clients.',
+      architectureHighlights: [
+        'W3C ARIA 1.2 Combobox State Machine',
+        'Polite Live Region Speech Buffer',
+        'Strict Focus Trap Guard Rails',
+        'Headless Keyboard Navigation Matrix'
+      ],
+      metricsDelta: [
+        { label: 'A11y Axe Violations', before: '18 Errors', after: '0 Errors (Clean)', impact: '100% Resolved' },
+        { label: 'Keyboard Nav Speed', before: 'Mouse Only', after: 'Full Keyboard Flow', impact: 'Universal Access' }
+      ],
+      lastUpdated: '2026-08-22',
+      reviewedByManager: false,
+      managerNotes: 'Pending final QA sign-off by Akash Biswas.',
+      managerRating: 4,
+    },
   },
-  // Advita Sharma tasks
+
+  // Advita Mali tasks
   {
     id: 'task-104',
     assignedTo: 'user-advita',
     createdBy: 'user-ahmed',
-    title: 'Build GraphQL Federation Subgraph for User Roles',
-    description: 'Expose RBAC authorization directives and unify schema across microservices.',
+    title: 'Build GraphQL Federation Subgraph for User Roles & Org Chart',
+    description: 'Expose RBAC authorization directives and unify schema across microservices with Apollo Router.',
     category: 'API Architecture',
     startDate: '2026-08-02',
     dueDate: '2026-08-12',
@@ -336,13 +394,37 @@ export const SEED_TASKS: Task[] = [
     actualHours: 30,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-3', 'kpi-6'],
+    review: {
+      problemStatement: 'Frontend applications were executing 7 distinct REST endpoints in waterfall sequence to reconstruct team hierarchy and role permissions, creating 850ms network round-trips.',
+      beforeState: 'Monolithic REST endpoints with severe over-fetching and N+1 database queries on organizational hierarchy depth lookups.',
+      afterState: 'Apollo Federation Subgraph exposing declarative @auth directive and unified User/Manager entity resolution in a single query.',
+      challenges: 'Resolving federated schema key entities across disparate legacy databases with varying primary key formats (UUID vs auto-increment integers).',
+      learning: 'Utilized Dataloader batching and Redis cached key resolvers to eliminate 100% of sub-graph N+1 latency spikes.',
+      businessOutcome: 'Reduced client network payload size by 72% and lowered end-to-end page assembly latency from 850ms to 92ms.',
+      architectureHighlights: [
+        'Apollo Federation v2 Supergraph',
+        'Dataloader In-Memory Request Batching',
+        'Schema-level @auth Directives',
+        'Distributed Entity Key Resolvers'
+      ],
+      metricsDelta: [
+        { label: 'Network Round Trips', before: '7 REST Requests', after: '1 GraphQL Query', impact: '-85% Calls' },
+        { label: 'Hierarchy Latency', before: '850 ms', after: '92 ms', impact: '9.2x Faster' },
+        { label: 'Payload Transfer', before: '180 KB', after: '24 KB', impact: '-86% Bandwidth' }
+      ],
+      lastUpdated: '2026-08-11',
+      reviewedByManager: true,
+      managerNotes: 'Advita Mali designed an exceptional subgraph architecture that resolved our longstanding multi-service latency bottleneck.',
+      managerRating: 5,
+    },
   },
   {
     id: 'task-105',
     assignedTo: 'user-advita',
     createdBy: 'user-advita',
     title: 'Rally: US-4011 Webhook Ingestion & Dead Letter Queue Handler',
-    description: 'Resilient event processing with exponential backoff and Cloud Pub/Sub subscriptions.',
+    description: 'Resilient event processing with exponential backoff and Cloud Pub/Sub subscriptions for Rally webhook sync.',
     category: 'Event Systems',
     startDate: '2026-08-14',
     dueDate: '2026-08-24',
@@ -354,13 +436,37 @@ export const SEED_TASKS: Task[] = [
     source: 'rally',
     storyPoints: 8,
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-4', 'kpi-6'],
+    review: {
+      problemStatement: 'Upstream third-party webhook bursts from Rally caused HTTP 504 gateway timeouts during sprint planning peak hours, dropping 14% of synchronization events.',
+      beforeState: 'Synchronous in-process HTTP webhook processing blocking worker threads and losing dropped payloads on network partitions.',
+      afterState: 'Asynchronous buffered ingestion pipeline with Google Cloud Pub/Sub and automated Dead Letter Queue (DLQ) retry handlers.',
+      challenges: 'Handling out-of-order webhook delivery and idempotent deduplication of identical task revision messages.',
+      learning: 'Engineered a Redis-backed distributed sliding window deduplication filter with 24-hour TTL message fingerprinting.',
+      businessOutcome: 'Achieved 99.99% event delivery reliability, processing over 120,000 daily webhook events with zero dropped updates.',
+      architectureHighlights: [
+        'Cloud Pub/Sub Push Subscriptions',
+        'Sliding Window SHA-256 Deduplication',
+        'Exponential Backoff Jitter Retry Loop',
+        'Automated Dead Letter Queue Alarms'
+      ],
+      metricsDelta: [
+        { label: 'Event Loss Rate', before: '14.2%', after: '0.00%', impact: '100% Reliable' },
+        { label: 'Throughput Capacity', before: '50 req/sec', after: '2,400 req/sec', impact: '48x Scale' },
+        { label: 'Webhook Response SLA', before: '1,200 ms', after: '18 ms', impact: 'Sub-20ms SLA' }
+      ],
+      lastUpdated: '2026-08-23',
+      reviewedByManager: true,
+      managerNotes: 'Rock-solid distributed system design. Zero incidents reported since deployment.',
+      managerRating: 5,
+    },
   },
   {
     id: 'task-106',
     assignedTo: 'user-advita',
     createdBy: 'user-ahmed',
     title: 'Workday: WD-COMP-101 Mandatory SOC2 Security Attestation',
-    description: 'Complete credential rotation audit and security policy compliance verification.',
+    description: 'Complete credential rotation audit and security policy compliance verification in Workday RaaS.',
     category: 'Compliance',
     startDate: '2026-08-10',
     dueDate: '2026-08-15',
@@ -371,66 +477,37 @@ export const SEED_TASKS: Task[] = [
     actualHours: 4,
     source: 'workday',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-5'],
+    review: {
+      problemStatement: 'Annual enterprise SOC2 Type II audit required 100% compliance verification across cryptographic key rotation and IAM least-privilege policies.',
+      beforeState: 'Manual spreadsheet tracking of credential lifecycles with vulnerability to missed rotation cycles.',
+      afterState: 'Automated Workday RaaS integration tracking key expiration events with programmatic attestation certificates.',
+      challenges: 'Coordinating cross-environment service account token refreshes without interrupting live production microservices.',
+      learning: 'Established zero-downtime dual-key overlapping rotation procedures validated by automated smoke tests.',
+      businessOutcome: 'Secured flawless 100% SOC2 compliance audit approval with zero flagged findings.',
+      architectureHighlights: [
+        'Automated Token Lifecycle Enforcer',
+        'Dual-Key Overlapping Rotation Cycle',
+        'Workday RaaS Audit Sync Pipeline'
+      ],
+      metricsDelta: [
+        { label: 'Compliance Score', before: '82%', after: '100%', impact: 'Audit Certified' },
+        { label: 'Attestation Turnaround', before: '5 Days', after: '2 Hours', impact: 'Instant Sync' }
+      ],
+      lastUpdated: '2026-08-14',
+      reviewedByManager: true,
+      managerNotes: 'Executed flawlessly with full compliance.',
+      managerRating: 5,
+    },
   },
-  // Vaibhav Pansare tasks
+
+  // Akash Biswas tasks
   {
     id: 'task-107',
-    assignedTo: 'user-vaibhav',
-    createdBy: 'user-ahmed',
-    title: 'Design Multi-Tenant Sharding Strategy for PostgreSQL',
-    description: 'Define row-level security and schema-per-tenant connection pooling with PgBouncer.',
-    category: 'Database Systems',
-    startDate: '2026-08-01',
-    dueDate: '2026-08-14',
-    completedDate: '2026-08-12',
-    status: 'completed',
-    priority: 'urgent',
-    estimatedHours: 36,
-    actualHours: 34,
-    source: 'manual',
-    approved: true,
-  },
-  {
-    id: 'task-108',
-    assignedTo: 'user-vaibhav',
-    createdBy: 'user-vaibhav',
-    title: 'Rally: US-4210 Distributed Lock Engine using Redis Redlock',
-    description: 'Implement distributed mutual exclusion for concurrent batch calculation jobs.',
-    category: 'Core Distributed',
-    startDate: '2026-08-10',
-    dueDate: '2026-08-21',
-    completedDate: '2026-08-19',
-    status: 'completed',
-    priority: 'high',
-    estimatedHours: 20,
-    actualHours: 19,
-    source: 'rally',
-    storyPoints: 8,
-    approved: true,
-  },
-  {
-    id: 'task-109',
-    assignedTo: 'user-vaibhav',
-    createdBy: 'user-ahmed',
-    title: 'Benchmark gRPC vs REST Inter-Service Throughput',
-    description: 'Generate load test metrics using k6 and analyze latency p99 distributions.',
-    category: 'Performance Benchmarking',
-    startDate: '2026-08-18',
-    dueDate: '2026-08-28',
-    status: 'in_progress',
-    priority: 'medium',
-    estimatedHours: 22,
-    actualHours: 14,
-    source: 'manual',
-    approved: true,
-  },
-  // Akash Verma tasks
-  {
-    id: 'task-110',
     assignedTo: 'user-akash',
     createdBy: 'user-ahmed',
     title: 'Author Automated Regression Test Matrix for Core APIs',
-    description: '100% coverage on critical authentication, task creation, and scoring algorithms.',
+    description: '100% coverage on critical authentication, task creation, and scoring algorithms using Vitest and Mock Service Worker.',
     category: 'QA Engineering',
     startDate: '2026-08-04',
     dueDate: '2026-08-15',
@@ -441,9 +518,33 @@ export const SEED_TASKS: Task[] = [
     actualHours: 27,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-3', 'kpi-6'],
+    review: {
+      problemStatement: 'Manual regression verification before every bi-weekly production release took 18 engineer-hours and still allowed edge-case rating calculation regressions into production.',
+      beforeState: 'Fragmented unit tests with 43% code coverage and zero automated end-to-end scoring pipeline validation.',
+      afterState: 'Comprehensive automated test suite spanning 480+ unit, integration, and property-based test cases with 98.4% branch coverage.',
+      challenges: 'Generating deterministic mock data for complex time-series KPI historical calculations and leap-year period boundary conditions.',
+      learning: 'Employed fast-check for property-based invariant testing to uncover obscure mathematical edge cases in weighted KPI score normalizations.',
+      businessOutcome: 'Cut release QA cycle from 18 hours to 4 minutes in CI pipeline, dropping post-release production defects to absolute zero.',
+      architectureHighlights: [
+        'Vitest Multi-Threaded Test Runner',
+        'Property-Based Invariant Verification',
+        'Mock Service Worker Network Layer',
+        'Automated CodeCov Gatekeeper Rules'
+      ],
+      metricsDelta: [
+        { label: 'Code Coverage', before: '43%', after: '98.4%', impact: '+55.4% Coverage' },
+        { label: 'Release Test Duration', before: '18 Hours', after: '4.2 Minutes', impact: '250x Faster' },
+        { label: 'Production Bug Escapes', before: '4 per sprint', after: '0 (Clean)', impact: 'Zero Defects' }
+      ],
+      lastUpdated: '2026-08-14',
+      reviewedByManager: true,
+      managerNotes: 'Akash Biswas transformed our release confidence. The QA automated framework is world-class.',
+      managerRating: 5,
+    },
   },
   {
-    id: 'task-111',
+    id: 'task-108',
     assignedTo: 'user-akash',
     createdBy: 'user-akash',
     title: 'Rally: DE-1920 Fix Flaky Playwright Visual Regression Snapshots',
@@ -459,13 +560,35 @@ export const SEED_TASKS: Task[] = [
     source: 'rally',
     storyPoints: 5,
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-4'],
+    review: {
+      problemStatement: 'Intermittent 1px sub-pixel font rendering differences in CI Docker containers resulted in 22% false-positive build failures in Playwright visual tests.',
+      beforeState: 'Unstable screenshot comparisons causing developers to ignore CI failure alerts and bypass PR branch protection checks.',
+      afterState: 'Deterministic canvas snapshot harness with fixed font glyph matrices, CSS animation disabling, and perceptual SSIM difference algorithms.',
+      challenges: 'Isolating operating system anti-aliasing variations between macOS local developer workstations and Linux CI Docker runners.',
+      learning: 'Configured Playwright snapshot thresholds using Structural Similarity Index (SSIM) rather than raw RGB pixel diffing.',
+      businessOutcome: 'Flaky test failure rate plummeted from 22% to 0.1%, restoring developer trust in CI/CD automated deployment gates.',
+      architectureHighlights: [
+        'SSIM Perceptual Image Diffing',
+        'CSS Reduced-Motion CI Interceptor',
+        'Dockerized Font Matrix Harmonizer'
+      ],
+      metricsDelta: [
+        { label: 'CI Flakiness Rate', before: '22.4%', after: '0.1%', impact: '99% Stability' },
+        { label: 'PR Pipeline Cycle', before: '45 mins', after: '12 mins', impact: '3.7x Quicker' }
+      ],
+      lastUpdated: '2026-08-21',
+      reviewedByManager: true,
+      managerNotes: 'Tremendous productivity win for the entire engineering organization.',
+      managerRating: 5,
+    },
   },
   {
-    id: 'task-112',
+    id: 'task-109',
     assignedTo: 'user-akash',
     createdBy: 'user-ahmed',
     title: 'Setup Automated Accessibility (a11y) Axe Linter in GitHub Actions',
-    description: 'Enforce WCAG 2.1 AA compliance gates on all Pull Requests.',
+    description: 'Enforce WCAG 2.1 AA compliance gates on all Pull Requests before merge.',
     category: 'CI/CD & a11y',
     startDate: '2026-08-20',
     dueDate: '2026-08-29',
@@ -475,10 +598,32 @@ export const SEED_TASKS: Task[] = [
     actualHours: 6,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-6'],
+    review: {
+      problemStatement: 'Accessibility regressions were frequently introduced during rapid UI feature iterations.',
+      beforeState: 'Manual sporadic accessibility spot-checking using browser DevTools before major quarterly releases.',
+      afterState: 'Automated GitHub Action blocking PR merges if Axe-core detects any WCAG 2.1 AA color contrast, label, or landmark violations.',
+      challenges: 'Minimizing false positives on dynamic modal dialogues and animated dropdowns.',
+      learning: 'Created custom testing fixtures that wait for framer-motion animations to reach steady state before evaluating DOM accessibility tree.',
+      businessOutcome: 'Guaranteed continuous WCAG compliance with zero manual audit overhead.',
+      architectureHighlights: [
+        'Axe-core Headless Crawler',
+        'GitHub Actions PR Bot Reporter',
+        'Motion Lifecycle A11y Sniffer'
+      ],
+      metricsDelta: [
+        { label: 'A11y Audit Automation', before: '0% (Manual)', after: '100% CI Covered', impact: 'Full Automation' }
+      ],
+      lastUpdated: '2026-08-23',
+      reviewedByManager: false,
+      managerNotes: 'On track for sprint completion.',
+      managerRating: 4,
+    },
   },
-  // Om Gupta tasks
+
+  // OM Bhutki tasks
   {
-    id: 'task-113',
+    id: 'task-110',
     assignedTo: 'user-om',
     createdBy: 'user-ahmed',
     title: 'Zero-Downtime Canary Deployment Pipeline for Kubernetes',
@@ -493,13 +638,37 @@ export const SEED_TASKS: Task[] = [
     actualHours: 32,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-3', 'kpi-6'],
+    review: {
+      problemStatement: 'Production deployments required 15-minute maintenance windows during off-peak hours, causing disruption to global overseas users and risking downtime.',
+      beforeState: 'Rolling deployment strategy without automatic traffic shifting or real-time error rate health verification.',
+      afterState: 'Argo Rollouts Progressive Delivery pipeline with automated 10% ➔ 25% ➔ 50% ➔ 100% canary traffic progression backed by Prometheus metric checks.',
+      challenges: 'Designing instantaneous automated rollback triggers when Prometheus detects HTTP 5xx error rate spikes exceeding 0.05% in the canary pod tier.',
+      learning: 'Incorporated statistical baseline analysis over 5-minute sliding windows to prevent transient network blips from triggering false rollbacks.',
+      businessOutcome: 'Achieved 100% true zero-downtime continuous deployment capability, enabling daylight production releases 6 times per day.',
+      architectureHighlights: [
+        'Argo Rollouts Canary Engine',
+        'Prometheus Automated Analysis Templates',
+        'Istio Service Mesh Traffic Shifter',
+        'Sub-second Automated Circuit Breaker Rollback'
+      ],
+      metricsDelta: [
+        { label: 'Deployment Downtime', before: '15 Minutes/Release', after: '0.00 Seconds', impact: 'Zero Downtime' },
+        { label: 'Release Frequency', before: 'Bi-Weekly', after: '6x Per Day', impact: '84x Faster Delivery' },
+        { label: 'Incident Rollback SLA', before: '25 Minutes', after: '4.2 Seconds', impact: '350x Faster Rollback' }
+      ],
+      lastUpdated: '2026-08-12',
+      reviewedByManager: true,
+      managerNotes: 'OM Bhutki delivered an extraordinary SRE milestone. Zero deployment disruptions recorded since go-live.',
+      managerRating: 5,
+    },
   },
   {
-    id: 'task-114',
+    id: 'task-111',
     assignedTo: 'user-om',
     createdBy: 'user-om',
     title: 'Rally: US-4330 Terraform Infrastructure as Code for Cloud SQL Replica',
-    description: 'Automate multi-region failover and read-replica provisioning.',
+    description: 'Automate multi-region failover and read-replica provisioning with Terraform modules and Cloud KMS encryption.',
     category: 'Cloud Infrastructure',
     startDate: '2026-08-12',
     dueDate: '2026-08-22',
@@ -511,13 +680,37 @@ export const SEED_TASKS: Task[] = [
     source: 'rally',
     storyPoints: 8,
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-4', 'kpi-6'],
+    review: {
+      problemStatement: 'Read-heavy reporting dashboards were saturating the primary PostgreSQL database connection limits during month-end executive reviews.',
+      beforeState: 'Single-node database instance handling both transactional writes and analytical read queries, causing CPU spikes up to 94%.',
+      afterState: 'Terraform-provisioned cross-region auto-scaling read replicas with PgBouncer connection multiplexing and automated replica health routing.',
+      challenges: 'Managing replication lag under burst write traffic and preventing stale reads during immediate post-write updates.',
+      learning: 'Architected read-after-write session sticky routing where mutation queries temporarily pin subsequent reads to primary node for 2 seconds.',
+      businessOutcome: 'Lowered primary database CPU load from 94% to 28% while boosting read throughput by 320%.',
+      architectureHighlights: [
+        'Terraform Modular Cloud SQL Blueprint',
+        'Cross-Region Asynchronous Read Replicas',
+        'PgBouncer Multiplexed Connection Pool',
+        'Sticky Read-After-Write Gateway'
+      ],
+      metricsDelta: [
+        { label: 'Primary DB CPU Load', before: '94% (Near Saturation)', after: '28% (Healthy)', impact: '-70% Load' },
+        { label: 'Read Query Throughput', before: '850 qps', after: '3,600 qps', impact: '+323% Capacity' },
+        { label: 'Replication Lag', before: 'N/A', after: '< 45 ms', impact: 'Real-time Replica' }
+      ],
+      lastUpdated: '2026-08-21',
+      reviewedByManager: true,
+      managerNotes: 'Architectural excellence. Database stability is rock solid.',
+      managerRating: 5,
+    },
   },
   {
-    id: 'task-115',
+    id: 'task-112',
     assignedTo: 'user-om',
     createdBy: 'user-ahmed',
     title: 'Configure Prometheus & Grafana Distributed Tracing Dashboards',
-    description: 'Correlate OpenTelemetry spans with memory leak alerts.',
+    description: 'Correlate OpenTelemetry spans with memory leak alerts and automated Slack incident notifications.',
     category: 'Observability',
     startDate: '2026-08-19',
     dueDate: '2026-08-27',
@@ -527,14 +720,37 @@ export const SEED_TASKS: Task[] = [
     actualHours: 12,
     source: 'manual',
     approved: false,
+    kpiIds: ['kpi-6'],
+    review: {
+      problemStatement: 'Engineers struggled to trace end-to-end latency breakdowns across microservices during sporadic p99 latency spikes.',
+      beforeState: 'Scattered logs across individual server instances requiring manual SSH and grep queries during production outages.',
+      afterState: 'Unified OpenTelemetry distributed tracing dashboard in Grafana correlating trace spans, CPU metrics, and database query timings in one view.',
+      challenges: 'Awaiting network security clearance to open cross-VPC peering tunnel for Jaeger collector telemetry ingestion.',
+      learning: 'Implemented trace sampling rate heuristics (100% of errors, 5% of successful requests) to prevent storage explosion.',
+      businessOutcome: 'Will reduce Mean Time to Identify (MTTI) production incidents from 45 minutes to under 2 minutes upon tunnel unblocking.',
+      architectureHighlights: [
+        'OpenTelemetry Collector Sidecars',
+        'Grafana Unified APM Dashboard',
+        'Dynamic Trace Span Sampling Heuristics',
+        'Automated Slack PagerDuty Webhook Integration'
+      ],
+      metricsDelta: [
+        { label: 'Expected MTTI', before: '45 mins', after: '< 2 mins', impact: '22x Faster Triage' }
+      ],
+      lastUpdated: '2026-08-23',
+      reviewedByManager: false,
+      managerNotes: 'Blocked on IT security tunnel approval. Ahmed Naimabadi actively escalating with NetOps team.',
+      managerRating: 4,
+    },
   },
-  // Mayank Joshi tasks
+
+  // Mayank Nichlani tasks
   {
-    id: 'task-116',
+    id: 'task-113',
     assignedTo: 'user-mayank',
     createdBy: 'user-ahmed',
     title: 'Design Component Library Token Hierarchy in Figma & Code',
-    description: 'Define semantic color ramps, typographic scale ratios, and elevation maps.',
+    description: 'Define semantic color ramps, typographic scale ratios, and elevation maps for enterprise products.',
     category: 'Design Systems',
     startDate: '2026-08-02',
     dueDate: '2026-08-11',
@@ -545,13 +761,37 @@ export const SEED_TASKS: Task[] = [
     actualHours: 24,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-3', 'kpi-6'],
+    review: {
+      problemStatement: 'Designers and developers were using inconsistent hex colors, spacing multiples, and arbitrary border radii across 5 distinct squad repositories.',
+      beforeState: 'Hardcoded arbitrary hex codes (#4f46e5, #3b82f6, #4338ca) and fragmented custom CSS classes scattered across codebase.',
+      afterState: 'Single-source-of-truth token architecture synchronized bidirectionally between Figma Tokens Studio and Style-Dictionary TypeScript exports.',
+      challenges: 'Enforcing mathematically consistent typography scales (Major Second 1.125 for dense UI, Perfect Fourth 1.333 for executive headers) across desktop and mobile.',
+      learning: 'Built a custom GitHub Action that automatically generates TypeScript design token constants and Tailwind theme plugins upon Figma token commits.',
+      businessOutcome: 'Cut new UI feature implementation time by 40% and achieved 100% visual parity between Figma designs and live production apps.',
+      architectureHighlights: [
+        'Style-Dictionary Token Compiler',
+        'Mathematical Typographic Hierarchy Scales',
+        'Semantic Dark/Light Mode Token Aliases',
+        'Automated Figma-to-Code GitHub Action'
+      ],
+      metricsDelta: [
+        { label: 'Color Token Consistency', before: '142 Hex Codes', after: '24 Semantic Tokens', impact: '83% Simplification' },
+        { label: 'UI Implementation Speed', before: '5 Days/Feature', after: '3 Days/Feature', impact: '40% Acceleration' },
+        { label: 'Design-to-Code Parity', before: '72%', after: '100% (Pixel-Perfect)', impact: 'Flawless Parity' }
+      ],
+      lastUpdated: '2026-08-10',
+      reviewedByManager: true,
+      managerNotes: 'Mayank Nichlani demonstrated exceptional design craftsmanship. The token hierarchy is beautifully structured.',
+      managerRating: 5,
+    },
   },
   {
-    id: 'task-117',
+    id: 'task-114',
     assignedTo: 'user-mayank',
     createdBy: 'user-mayank',
     title: 'Rally: US-4115 Interactive Radar & Donut Chart Visualizations',
-    description: 'Implement animated Recharts components with accessible tooltips and screen-reader tables.',
+    description: 'Implement animated Recharts components with accessible tooltips and screen-reader data tables.',
     category: 'Data Visualization',
     startDate: '2026-08-12',
     dueDate: '2026-08-23',
@@ -563,13 +803,36 @@ export const SEED_TASKS: Task[] = [
     source: 'rally',
     storyPoints: 5,
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-4', 'kpi-6'],
+    review: {
+      problemStatement: 'Executive stakeholders needed an immediate multidimensional visual snapshot of squad skill balances and KPI performance metrics.',
+      beforeState: 'Static textual tables that made comparing multi-variable employee metric competencies difficult to scan quickly.',
+      afterState: 'Dynamic SVG Radar and Donut visualizer suite powered by Recharts with smooth tweened entry animations and accessible data fallbacks.',
+      challenges: 'Ensuring chart responsiveness across varying screen sizes without clipping axis labels or causing layout reflows.',
+      learning: 'Leveraged CSS container queries combined with ResponsiveContainer debounced resize observers for fluid SVG canvas scaling.',
+      businessOutcome: 'Elevated executive dashboard engagement by 65% and received praise during Q3 Engineering Leadership review.',
+      architectureHighlights: [
+        'Recharts SVG Geometry Engine',
+        'Fluid Container Query Resizing',
+        'Accessible Screen Reader HTML Tables',
+        'Smooth Spring Tween Transitions'
+      ],
+      metricsDelta: [
+        { label: 'Chart Render Latency', before: '320 ms', after: '22 ms', impact: '14x Snappier' },
+        { label: 'Executive User Engagement', before: '2.1 mins/session', after: '6.8 mins/session', impact: '+223% Usage' }
+      ],
+      lastUpdated: '2026-08-22',
+      reviewedByManager: true,
+      managerNotes: 'Superb visual design and intuitive user interaction.',
+      managerRating: 5,
+    },
   },
   {
-    id: 'task-118',
+    id: 'task-115',
     assignedTo: 'user-mayank',
     createdBy: 'user-ahmed',
     title: 'Mobile Touch Target & Responsive Layout Audit',
-    description: 'Ensure 44px minimum touch targets and zero horizontal scroll on tablet/mobile.',
+    description: 'Ensure 44px minimum touch targets and zero horizontal scroll on tablet and mobile viewports.',
     category: 'Mobile UX',
     startDate: '2026-08-18',
     dueDate: '2026-08-28',
@@ -579,14 +842,36 @@ export const SEED_TASKS: Task[] = [
     actualHours: 8,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-6'],
+    review: {
+      problemStatement: 'Mobile smartphone users reported accidental mis-taps on closely spaced action icons and horizontal layout clipping on narrow screens.',
+      beforeState: '28px touch targets without adequate touch margin spacing on mobile viewports under 390px width.',
+      afterState: 'Standardized 44px minimum touch hitboxes with responsive flex-wrap layouts and drawer navigation for compact screens.',
+      challenges: 'Maintaining dense enterprise data density on desktop while dynamically expanding touch target padding on touch-enabled devices.',
+      learning: 'Used Tailwind pointer media queries (@media (pointer: coarse)) to selectively scale hitboxes only on touch devices.',
+      businessOutcome: 'Eliminated mobile tap errors and improved mobile task approval completion rate by 28%.',
+      architectureHighlights: [
+        'Pointer Coarse Media Query Scaling',
+        'Fluid Responsive Bento Layout Grid',
+        'Bottom Sheet Mobile Navigation'
+      ],
+      metricsDelta: [
+        { label: 'Mobile Tap Error Rate', before: '16.4%', after: '1.2%', impact: '92% Fewer Mis-taps' }
+      ],
+      lastUpdated: '2026-08-23',
+      reviewedByManager: false,
+      managerNotes: 'Excellent progress across all responsive breakpoints.',
+      managerRating: 4,
+    },
   },
-  // Yaddhnesh Rane tasks
+
+  // Yadnesh (strictly NO surname) tasks
   {
-    id: 'task-119',
-    assignedTo: 'user-yaddhnesh',
+    id: 'task-116',
+    assignedTo: 'user-yadnesh',
     createdBy: 'user-ahmed',
     title: 'Build Mobile Offline Sync Engine with IndexedDB Cache',
-    description: 'Background synchronization worker that queues offline mutations.',
+    description: 'Background synchronization worker that queues offline mutations and reconciles delta changes upon network reconnection.',
     category: 'Mobile Architecture',
     startDate: '2026-08-01',
     dueDate: '2026-08-12',
@@ -597,13 +882,37 @@ export const SEED_TASKS: Task[] = [
     actualHours: 30,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-3', 'kpi-6'],
+    review: {
+      problemStatement: 'Engineers working on airplanes, trains, or unstable cellular connections experienced data loss when submitting task updates offline.',
+      beforeState: 'Direct fetch mutations that threw unhandled network errors and cleared form state when offline.',
+      afterState: 'Local-first offline sync engine powered by IndexedDB mutation log and Service Worker Background Sync API.',
+      challenges: 'Resolving multi-device concurrent conflict resolution when the same task status was updated simultaneously on mobile and web.',
+      learning: 'Implemented Conflict-free Replicated Data Type (CRDT) Last-Write-Wins timestamps with cryptographic vector clock reconciliation.',
+      businessOutcome: 'Zero data loss for mobile users; enabled 100% offline task logging and evaluation submissions.',
+      architectureHighlights: [
+        'IndexedDB Local Storage Queue',
+        'Service Worker Background Sync API',
+        'Vector Clock Conflict Resolution Engine',
+        'Optimistic UI State Updaters'
+      ],
+      metricsDelta: [
+        { label: 'Offline Data Loss', before: '100% (Lost on drop)', after: '0.00% (Guaranteed Sync)', impact: '100% Reliable' },
+        { label: 'Sync Latency on Reconnect', before: 'N/A', after: '340 ms', impact: 'Instant Sync' },
+        { label: 'Offline User NPS', before: '42', after: '94', impact: '+52 NPS Points' }
+      ],
+      lastUpdated: '2026-08-11',
+      reviewedByManager: true,
+      managerNotes: 'Yadnesh engineered a masterclass local-first offline architecture. Highly innovative solution.',
+      managerRating: 5,
+    },
   },
   {
-    id: 'task-120',
-    assignedTo: 'user-yaddhnesh',
-    createdBy: 'user-yaddhnesh',
+    id: 'task-117',
+    assignedTo: 'user-yadnesh',
+    createdBy: 'user-yadnesh',
     title: 'Rally: US-4288 Push Notification Dispatch Service',
-    description: 'FCM / APNs notification dispatch pipeline with user preference filters.',
+    description: 'FCM / APNs notification dispatch pipeline with user preference filters and rate limiters.',
     category: 'Mobile Backend',
     startDate: '2026-08-13',
     dueDate: '2026-08-23',
@@ -615,13 +924,37 @@ export const SEED_TASKS: Task[] = [
     source: 'rally',
     storyPoints: 8,
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-4', 'kpi-6'],
+    review: {
+      problemStatement: 'Managers missed critical task approval requests because email notifications were buried in overflowing inboxes.',
+      beforeState: 'Generic email digests sent once per 24 hours with low open rates and delayed task approval cycles.',
+      afterState: 'Sub-second real-time Push Notification service sending targeted iOS/Android alerts with rich action buttons (Approve / Review).',
+      challenges: 'Throttling high-volume notification bursts to respect Apple APNs and Google FCM rate limits and user quiet hours.',
+      learning: 'Integrated Redis Token Bucket rate limiting per user ID with timezone-aware notification dispatch scheduling.',
+      businessOutcome: 'Reduced manager task approval turnaround time from 26 hours to 42 minutes.',
+      architectureHighlights: [
+        'Firebase Cloud Messaging (FCM) v1 API',
+        'Apple Push Notification Service (APNs) HTTP/2',
+        'Token Bucket Rate Limiting Engine',
+        'Timezone-Aware Notification Scheduler'
+      ],
+      metricsDelta: [
+        { label: 'Approval Turnaround', before: '26.4 Hours', after: '42 Minutes', impact: '37x Faster Approvals' },
+        { label: 'Notification Delivery SLA', before: 'Minutes', after: '< 450 ms', impact: 'Real-time Push' },
+        { label: 'Manager Engagement', before: '31%', after: '92%', impact: '+61% Open Rate' }
+      ],
+      lastUpdated: '2026-08-22',
+      reviewedByManager: true,
+      managerNotes: 'Immediate tangible business impact. Approval cycle times improved dramatically.',
+      managerRating: 5,
+    },
   },
   {
-    id: 'task-121',
-    assignedTo: 'user-yaddhnesh',
+    id: 'task-118',
+    assignedTo: 'user-yadnesh',
     createdBy: 'user-ahmed',
     title: 'Workday: WD-UTIL-204 Professional Cloud Certification Renewal',
-    description: 'Upload certification credentials and verify continuing education credits.',
+    description: 'Upload certification credentials and verify continuing education credits in Workday RaaS.',
     category: 'HCM Upskilling',
     startDate: '2026-08-16',
     dueDate: '2026-08-25',
@@ -632,10 +965,31 @@ export const SEED_TASKS: Task[] = [
     actualHours: 6,
     source: 'workday',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-5'],
+    review: {
+      problemStatement: 'Mandatory corporate cloud architect accreditation renewal needed verification for enterprise client contracts.',
+      beforeState: 'Manual paper submissions to HR requiring 3 weeks processing time.',
+      afterState: 'Instant automated badge verification via Workday HCM RaaS API integration.',
+      challenges: 'Validating external Google Cloud Certified Professional credential hashes.',
+      learning: 'Configured automated Webhook verification pipeline with Credly / Workday.',
+      businessOutcome: '100% compliance certified for cloud partner tier status.',
+      architectureHighlights: [
+        'Workday RaaS Custom Integration',
+        'Credly Digital Badge Verifier'
+      ],
+      metricsDelta: [
+        { label: 'Verification Time', before: '21 Days', after: '5 Minutes', impact: 'Automated Certification' }
+      ],
+      lastUpdated: '2026-08-24',
+      reviewedByManager: true,
+      managerNotes: 'Congratulations on renewing your Cloud Architect certification, Yadnesh!',
+      managerRating: 5,
+    },
   },
-  // Additional tasks for Elena's team for comparison
+
+  // Additional tasks for Elena's team for cross-department comparison
   {
-    id: 'task-122',
+    id: 'task-119',
     assignedTo: 'user-carlos',
     createdBy: 'user-elena',
     title: 'Spark Streaming ETL Pipeline for Event Ingestion',
@@ -650,9 +1004,30 @@ export const SEED_TASKS: Task[] = [
     actualHours: 29,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-3'],
+    review: {
+      problemStatement: 'Legacy batch jobs caused 24-hour latency in business intelligence reporting.',
+      beforeState: 'Daily cron batch jobs that took 6 hours to compute aggregations.',
+      afterState: 'Real-time Apache Spark Streaming pipeline with micro-batch partitions directly into BigQuery.',
+      challenges: 'Handling out-of-order event late arrivals with watermark thresholds.',
+      learning: 'Configured 10-minute sliding event time watermarks to guarantee accurate aggregation counts.',
+      businessOutcome: 'Reduced BI reporting freshness from 24 hours to 45 seconds.',
+      architectureHighlights: [
+        'Apache Spark Streaming Engine',
+        'BigQuery Storage Write API',
+        'Event Time Watermarking Strategy'
+      ],
+      metricsDelta: [
+        { label: 'Data Freshness', before: '24 Hours', after: '45 Seconds', impact: 'Real-Time Telemetry' }
+      ],
+      lastUpdated: '2026-08-17',
+      reviewedByManager: true,
+      managerNotes: 'Fantastic streaming data architecture.',
+      managerRating: 5,
+    },
   },
   {
-    id: 'task-123',
+    id: 'task-120',
     assignedTo: 'user-priya',
     createdBy: 'user-elena',
     title: 'Model Drift Detection and Automated Retraining Workflow',
@@ -667,18 +1042,38 @@ export const SEED_TASKS: Task[] = [
     actualHours: 31,
     source: 'manual',
     approved: true,
+    kpiIds: ['kpi-1', 'kpi-2', 'kpi-6'],
+    review: {
+      problemStatement: 'Production machine learning recommendation models degraded by 12% in accuracy without automated alerting.',
+      beforeState: 'Manual monthly model evaluation scripts requiring data scientist interventions.',
+      afterState: 'Automated Kolmogorov-Smirnov statistical drift detection monitoring feature distributions in real-time.',
+      challenges: 'Balancing drift sensitivity thresholds to prevent unnecessary expensive GPU retraining runs.',
+      learning: 'Implemented population stability index (PSI) combined with rolling window validation.',
+      businessOutcome: 'Guaranteed 99.2% model prediction accuracy with zero manual monitoring overhead.',
+      architectureHighlights: [
+        'Statistical Drift Detection Pipeline',
+        'Vertex AI Automated Retraining DAG',
+        'Feast Open Source Feature Store'
+      ],
+      metricsDelta: [
+        { label: 'Model Prediction Accuracy', before: '87.4%', after: '99.2%', impact: '+11.8% Accuracy' }
+      ],
+      lastUpdated: '2026-08-18',
+      reviewedByManager: true,
+      managerNotes: 'Remarkable MLOps automation pipeline.',
+      managerRating: 5,
+    },
   },
 ];
 
 export const SEED_KPI_RESULTS: KPIResult[] = [
   // Manager ratings (Quarterly)
-  { id: 'res-1', kpiId: 'kpi-6', userId: 'user-harsh', period: 'Q3 2026', actualValue: 4.8, computedScore: 96, notes: 'Exceptional frontend craftsmanship and prompt mentoring of junior colleagues.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
-  { id: 'res-2', kpiId: 'kpi-6', userId: 'user-advita', period: 'Q3 2026', actualValue: 4.7, computedScore: 94, notes: 'Outstanding cross-stack execution on API federation and pub/sub handlers.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
-  { id: 'res-3', kpiId: 'kpi-6', userId: 'user-vaibhav', period: 'Q3 2026', actualValue: 4.9, computedScore: 98, notes: 'Deep architectural mastery on PostgreSQL sharding and distributed locks.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
-  { id: 'res-4', kpiId: 'kpi-6', userId: 'user-akash', period: 'Q3 2026', actualValue: 4.5, computedScore: 90, notes: 'Significant test coverage gains and robust regression test framework.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
-  { id: 'res-5', kpiId: 'kpi-6', userId: 'user-om', period: 'Q3 2026', actualValue: 4.6, computedScore: 92, notes: 'Superb reliability enhancements with zero-downtime deployment pipelines.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
-  { id: 'res-6', kpiId: 'kpi-6', userId: 'user-mayank', period: 'Q3 2026', actualValue: 4.7, computedScore: 94, notes: 'High visual precision and clean token system implementation.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
-  { id: 'res-7', kpiId: 'kpi-6', userId: 'user-yaddhnesh', period: 'Q3 2026', actualValue: 4.8, computedScore: 96, notes: 'Brilliant offline-first mobile sync architecture and rapid execution.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
+  { id: 'res-1', kpiId: 'kpi-6', userId: 'user-harsh', period: 'Q3 2026', actualValue: 4.9, computedScore: 98, notes: 'Exceptional frontend craftsmanship, atomic token system leadership, and high-velocity code reviews.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
+  { id: 'res-2', kpiId: 'kpi-6', userId: 'user-advita', period: 'Q3 2026', actualValue: 4.8, computedScore: 96, notes: 'Outstanding cross-stack execution on API federation, Pub/Sub webhook resilience, and SOC2 attestation.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
+  { id: 'res-3', kpiId: 'kpi-6', userId: 'user-akash', period: 'Q3 2026', actualValue: 4.8, computedScore: 96, notes: 'Significant test coverage gains, 98.4% branch coverage, and Playwright visual stability fix.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
+  { id: 'res-4', kpiId: 'kpi-6', userId: 'user-om', period: 'Q3 2026', actualValue: 4.9, computedScore: 98, notes: 'Superb reliability enhancements with zero-downtime Argo Rollouts and Terraform multi-region Cloud SQL.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
+  { id: 'res-5', kpiId: 'kpi-6', userId: 'user-mayank', period: 'Q3 2026', actualValue: 4.7, computedScore: 94, notes: 'High visual precision, mathematical typography token system, and responsive mobile optimization.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
+  { id: 'res-6', kpiId: 'kpi-6', userId: 'user-yadnesh', period: 'Q3 2026', actualValue: 4.9, computedScore: 98, notes: 'Brilliant offline-first mobile sync architecture, real-time push notification engine, and rapid execution.', updatedDate: '2026-08-20', evaluatorId: 'user-ahmed' },
 ];
 
 export const SEED_INTEGRATIONS: Integration[] = [
